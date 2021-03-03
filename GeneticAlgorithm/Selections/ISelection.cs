@@ -8,6 +8,6 @@ namespace GeneticAlgorithm
 {
     public interface ISelection
     {
-        IList<ChromoSome> DoSelection(int count, Generation generation);
+        IList<ChromoSome> Select(int count, Generation generation);
     }
 }

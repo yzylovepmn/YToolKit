@@ -99,7 +99,7 @@ namespace GeneticAlgorithm
 
         private IList<ChromoSome> _Select()
         {
-            return _selection.DoSelection(_population.MinPopulationCount, _population.CurrentGeneration);
+            return _selection.Select(_population.MinPopulationCount, _population.CurrentGeneration);
         }
 
         private IList<ChromoSome> _Cross(IList<ChromoSome> parents)
@@ -107,16 +107,14 @@ namespace GeneticAlgorithm
             var count = _crossover.ParentCount;
             var subParents = new List<ChromoSome>();
             var children = new List<ChromoSome>(_population.MinPopulationCount);
-            var index = 0;
             foreach (var parent in parents)
             {
                 subParents.Add(parent);
-                if (++index == count)
+                if (subParents.Count == count)
                 {
                     if (Util.NextDouble() < _crossoverProbability)
                         children.AddRange(_crossover.Cross(subParents));
                     subParents.Clear();
-                    index = 0;
                 }
             }
             return children;
@@ -125,7 +123,7 @@ namespace GeneticAlgorithm
         private void _Mutate(IList<ChromoSome> chromoSomes)
         {
             foreach (var chromoSome in chromoSomes)
-                _mutation.DoMutation(chromoSome, _mutationProbability);
+                _mutation.Mutate(chromoSome, _mutationProbability);
         }
 
         private IList<ChromoSome> _Adjustment(IList<ChromoSome> children, IList<ChromoSome> parents)

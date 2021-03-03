@@ -15,13 +15,13 @@ namespace GeneticAlgorithm
 
         private int _minCount;
 
-        public IList<ChromoSome> DoSelection(int count, Generation generation)
+        public IList<ChromoSome> Select(int count, Generation generation)
         {
             if (count < _minCount) throw new ArgumentOutOfRangeException();
             if (generation == null) throw new ArgumentNullException();
-            return DoSelectionInternal(count, generation);
+            return SelectInternal(count, generation);
         }
 
-        protected abstract IList<ChromoSome> DoSelectionInternal(int count, Generation generation);
+        protected abstract IList<ChromoSome> SelectInternal(int count, Generation generation);
     }
 }

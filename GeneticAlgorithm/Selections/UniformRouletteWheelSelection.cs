@@ -8,7 +8,7 @@ namespace GeneticAlgorithm
 {
     public class UniformRouletteWheelSelection : RouletteWheelSelection
     {
-        protected override IList<ChromoSome> DoSelectionInternal(int count, Generation generation)
+        protected override IList<ChromoSome> SelectInternal(int count, Generation generation)
         {
             var value = Util.NextDouble();
             var stride = 1.0 / count;

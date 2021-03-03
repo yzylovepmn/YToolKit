@@ -37,7 +37,7 @@ namespace GeneticAlgorithm
             return selected;
         }
 
-        protected override IList<ChromoSome> DoSelectionInternal(int count, Generation generation)
+        protected override IList<ChromoSome> SelectInternal(int count, Generation generation)
         {
             var rouletteWheel = CalcRouletteWheel(generation.ChromoSomes);
             return DoSelectionFromRouletteWheel(count, generation.ChromoSomes, rouletteWheel, () => Util.NextDouble());

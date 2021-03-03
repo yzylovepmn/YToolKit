@@ -16,7 +16,7 @@ namespace GeneticAlgorithm.Mutations
         public int Count { get { return _count; } }
         private int _count;
 
-        protected override void DoMutationInternal(ChromoSome chromoSome, double mutationProbability)
+        protected override void MutateInternal(ChromoSome chromoSome, double mutationProbability)
         {
             if (chromoSome.Length < _count) throw new ArgumentOutOfRangeException();
             if (Util.NextDouble() < mutationProbability)

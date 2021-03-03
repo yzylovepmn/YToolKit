@@ -8,12 +8,12 @@ namespace GeneticAlgorithm
 {
     public abstract class Mutation : IMutation
     {
-        public void DoMutation(ChromoSome chromoSome, double mutationProbability)
+        public void Mutate(ChromoSome chromoSome, double mutationProbability)
         {
             if (chromoSome == null) throw new ArgumentNullException();
-            DoMutationInternal(chromoSome, mutationProbability);
+            MutateInternal(chromoSome, mutationProbability);
         }
 
-        protected abstract void DoMutationInternal(ChromoSome chromoSome, double mutationProbability);
+        protected abstract void MutateInternal(ChromoSome chromoSome, double mutationProbability);
     }
 }

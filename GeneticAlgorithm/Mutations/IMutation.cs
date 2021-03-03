@@ -8,6 +8,6 @@ namespace GeneticAlgorithm
 {
     public interface IMutation
     {
-        void DoMutation(ChromoSome chromoSome, double mutationProbability);
+        void Mutate(ChromoSome chromoSome, double mutationProbability);
     }
 }
