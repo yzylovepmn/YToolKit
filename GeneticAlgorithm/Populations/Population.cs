@@ -8,6 +8,8 @@ namespace GeneticAlgorithm
 {
     public class Population
     {
+        public const int DefaultGenerationCount = 20;
+
         public Population(int minPopulationCount, int maxPopulationCount, ChromoSome originChromoSome)
         {
             if (minPopulationCount < 2 || maxPopulationCount < _minPopulationCount)
@@ -15,11 +17,24 @@ namespace GeneticAlgorithm
             _minPopulationCount = minPopulationCount;
             _maxPopulationCount = maxPopulationCount;
             _originChromoSome = originChromoSome;
-            _generations = new List<Generation>();
+            _generations = new LimitedList<Generation>(DefaultGenerationCount);
         }
 
         public ChromoSome OriginChromoSome { get { return _originChromoSome; } }
         private ChromoSome _originChromoSome;
+
+        public int MaxGenerationCount
+        {
+            get { return _maxGenerationCount; }
+            set
+            {
+                _maxGenerationCount = value;
+                if (_maxGenerationCount < 1)
+                    throw new ArgumentOutOfRangeException();
+                _generations.Resize(_maxGenerationCount);
+            }
+        }
+        private int _maxGenerationCount;
 
         public int MinPopulationCount { get { return _minPopulationCount; } }
         private int _minPopulationCount;
@@ -28,7 +43,7 @@ namespace GeneticAlgorithm
         private int _maxPopulationCount;
 
         public IEnumerable<Generation> Generations { get { return _generations; } }
-        private List<Generation> _generations;
+        private LimitedList<Generation> _generations;
 
         public Generation CurrentGeneration { get { return _currentGeneration; } }
         private Generation _currentGeneration;

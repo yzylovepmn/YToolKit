@@ -37,9 +37,20 @@ namespace GeneticAlgorithm
             _data.Remove(item);
         }
 
+        public void Clear()
+        {
+            _data.Clear();
+        }
+
+        public void Resize(int newSize)
+        {
+            _limit = newSize;
+            _EnsureCapacity();
+        }
+
         private void _EnsureCapacity()
         {
-            if (_data.Count > _limit)
+            while (_data.Count > _limit)
                 _data.RemoveAt(0);
         }
 
