@@ -287,14 +287,14 @@ namespace YGraphics
                             if (item.HasValue)
                             {
                                 var line = item.Value;
-                                var newLine = (GraphicLine)tuple.Item1;
                                 var offset = currentOffset + line.Length;
                                 if (currentOffset < endOffset && offset > startOffset)
                                 {
                                     if (currentOffset >= startOffset && offset <= endOffset)
-                                        subGraphics.Add(newLine);
+                                        subGraphics.Add(tuple.Item1);
                                     else
                                     {
+                                        var newLine = (GraphicLine)tuple.Item1;
                                         var sp = newLine.Start;
                                         var ep = newLine.End;
                                         if (startOffset > currentOffset)
@@ -314,7 +314,7 @@ namespace YGraphics
                                 }
                                 currentOffset = offset;
                             }
-                            else continue;
+                            else subGraphics.Add(tuple.Item1);
                         }
                         graphics.Add(new GraphicCompositeCurve(subGraphics, true));
                     }
