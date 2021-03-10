@@ -89,11 +89,12 @@ namespace YGraphics
 
         public IEnumerable<Point> ToSegments(double segmentLength)
         {
+            var vector = (Vector)_center;
             var transform = GraphicHelper.CreateRotateMatrix(_center, _rotateAngle);
             var points = GraphicHelper.ToSegments(_lr, _sr, 0, Math.PI * 2, segmentLength);
             if (_isReverse)
                 points.Reverse();
-            return points.Select(p => p * transform);
+            return points.Select(p => (p + vector) * transform);
         }
     }
 }
