@@ -83,8 +83,6 @@ namespace YGraphics
                 }
                 var startAngle = Utilities.RadianToAngle(GraphicHelper.GetParameter(_lr, _sr, 0, startOffset, segmentLength));
                 var endAngle = Utilities.RadianToAngle(GraphicHelper.GetParameter(_lr, _sr, 0, endOffset, segmentLength));
-                Utilities.Clamp(ref startAngle, 0, 360);
-                Utilities.Clamp(ref endAngle, 0, 360);
                 yield return new GraphicEllipticalArc(_center, _lr, _sr, startAngle, endAngle, _rotateAngle, _isReverse);
             }
         }

@@ -14,10 +14,10 @@ namespace YGraphics
         {
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException();
-            if (!Utilities.InRange(startAngle, 0, 360) || !Utilities.InRange(endAngle, 0, 360))
-                throw new ArgumentOutOfRangeException();
             if (startAngle > endAngle)
                 throw new ArgumentOutOfRangeException();
+            if (endAngle - startAngle > 360)
+                throw new ArgumentException();
 
             _center = center;
             _radius = radius;
@@ -92,8 +92,6 @@ namespace YGraphics
                 }
                 var startAngle = Utilities.RadianToAngle(startOffset / _radius) + _startAngle;
                 var endAngle = Utilities.RadianToAngle(endOffset / _radius) + _startAngle;
-                Utilities.Clamp(ref startAngle, 0, 360);
-                Utilities.Clamp(ref endAngle, 0, 360);
                 yield return new GraphicArc(_center, _radius, startAngle, endAngle, _isReverse);
             }
         }

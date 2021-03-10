@@ -66,8 +66,6 @@ namespace YGraphics
                 }
                 var startAngle = Utilities.RadianToAngle(startOffset / _radius);
                 var endAngle = Utilities.RadianToAngle(endOffset / _radius);
-                Utilities.Clamp(ref startAngle, 0, 360);
-                Utilities.Clamp(ref endAngle, 0, 360);
                 yield return new GraphicArc(_center, _radius, startAngle, endAngle, _isReverse);
             }
         }

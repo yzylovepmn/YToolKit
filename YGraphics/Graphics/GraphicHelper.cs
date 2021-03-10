@@ -239,8 +239,8 @@ namespace YGraphics
                                         var radius = Math.Abs(distance);
                                         var startV = before.P2 - center;
                                         var endV = after.P1 - center;
-                                        var startAngle = Vector.AngleBetween(new Vector(1, 0), startV) + 180;
-                                        var endAngle = Vector.AngleBetween(new Vector(1, 0), endV) + 180;
+                                        var startAngle = Vector.AngleBetween(new Vector(1, 0), startV);
+                                        var endAngle = Vector.AngleBetween(new Vector(1, 0), endV);
                                         if (endAngle > startAngle)
                                             tuples.Add(new Tuple<IGraphic, GeoLine?>(new GraphicArc(center, radius, startAngle, endAngle), null));
                                         else tuples.Add(new Tuple<IGraphic, GeoLine?>(new GraphicArc(center, radius, endAngle, startAngle, true), null));

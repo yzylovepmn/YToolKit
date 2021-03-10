@@ -14,10 +14,10 @@ namespace YGraphics
         {
             if (lr < 0 || sr < 0)
                 throw new ArgumentOutOfRangeException();
-            if (!Utilities.InRange(startAngle, 0, 360) || !Utilities.InRange(endAngle, 0, 360))
-                throw new ArgumentOutOfRangeException();
             if (startAngle > endAngle)
                 throw new ArgumentOutOfRangeException();
+            if (endAngle - startAngle > 360)
+                throw new ArgumentException();
 
             _center = center;
             _lr = lr;
@@ -105,8 +105,6 @@ namespace YGraphics
                 }
                 var startAngle = Utilities.RadianToAngle(GraphicHelper.GetParameter(_lr, _sr, startRadian, startOffset, segmentLength));
                 var endAngle = Utilities.RadianToAngle(GraphicHelper.GetParameter(_lr, _sr, startRadian, endOffset, segmentLength));
-                Utilities.Clamp(ref startAngle, 0, 360);
-                Utilities.Clamp(ref endAngle, 0, 360);
                 yield return new GraphicEllipticalArc(_center, _lr, _sr, startAngle, endAngle, _rotateAngle, _isReverse);
             }
         }
