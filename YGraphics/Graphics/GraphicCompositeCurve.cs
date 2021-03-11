@@ -16,6 +16,9 @@ namespace YGraphics
                 throw new ArgumentNullException();
 
             _graphics = graphics.ToArray();
+            if (_graphics.Length == 0)
+                throw new ArgumentOutOfRangeException();
+
             _isContinuously = isContinuously;
         }
 
