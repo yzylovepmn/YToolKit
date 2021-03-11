@@ -277,6 +277,7 @@ namespace YGraphics
                     var graphics = new List<IGraphic>();
                     foreach (var segment in segments)
                     {
+                        var started = false;
                         var subGraphics = new List<IGraphic>();
                         var currentOffset = 0d;
                         var startOffset = segment.StartOffset;
@@ -290,10 +291,12 @@ namespace YGraphics
                                 var offset = currentOffset + line.Length;
                                 if (currentOffset < endOffset && offset > startOffset)
                                 {
+                                    started = true;
                                     if (currentOffset >= startOffset && offset <= endOffset)
                                         subGraphics.Add(tuple.Item1);
                                     else
                                     {
+                                        var brk = false;
                                         var newLine = (GraphicLine)tuple.Item1;
                                         var sp = newLine.Start;
                                         var ep = newLine.End;
@@ -308,13 +311,17 @@ namespace YGraphics
                                             var p = line.GetPoint(endOffset - currentOffset);
                                             if (newLine.IsOnLine(p))
                                                 ep = p;
+                                            brk = true;
                                         }
                                         subGraphics.Add(new GraphicLine(sp, ep));
+                                        if (brk)
+                                            break;
                                     }
                                 }
                                 currentOffset = offset;
                             }
-                            else subGraphics.Add(tuple.Item1);
+                            else if (started)
+                                subGraphics.Add(tuple.Item1);
                         }
                         graphics.Add(new GraphicCompositeCurve(subGraphics, true));
                     }

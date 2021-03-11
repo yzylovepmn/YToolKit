@@ -20,7 +20,7 @@ namespace YGraphics
         public double StartOffset { get { return _startOffset; } }
         private double _startOffset;
 
-        public double Count { get { return _length; } }
+        public double Length { get { return _length; } }
         private double _length;
 
         public double EndOffset { get { return _startOffset + _length; } }

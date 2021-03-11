@@ -44,10 +44,9 @@ namespace YGraphics
             var newRadius = _radius + distance;
             if (newRadius > 0)
             {
-                IGraphic graphic = new GraphicCicle(_center, newRadius, _isReverse);
                 if (segments != null)
-                    graphic = new GraphicCompositeCurve(graphic.Spilt(segments, segmentLength), false);
-                return graphic;
+                    return new GraphicCompositeCurve(Spilt(segments, segmentLength).Select(graphic => graphic.Extend(distance, segmentLength, jointType)), false);
+                return new GraphicCicle(_center, newRadius, _isReverse);
             }
             return null;
         }

@@ -62,10 +62,9 @@ namespace YGraphics
             var newSR = _sr + distance;
             if (newLR > 0 && newSR > 0)
             {
-                IGraphic graphic = new GraphicEllipse(_center, newLR, newSR, _rotateAngle, _isReverse);
                 if (segments != null)
-                    graphic = new GraphicCompositeCurve(graphic.Spilt(segments, segmentLength), false);
-                return graphic;
+                    return new GraphicCompositeCurve(Spilt(segments, segmentLength).Select(graphic => graphic.Extend(distance, segmentLength, jointType)), false);
+                return new GraphicEllipse(_center, newLR, newSR, _rotateAngle, _isReverse);
             }
             return null;
         }
