@@ -291,9 +291,11 @@ namespace YGraphics
                                 var offset = currentOffset + line.Length;
                                 if (currentOffset < endOffset && offset > startOffset)
                                 {
-                                    started = true;
                                     if (currentOffset >= startOffset && offset <= endOffset)
+                                    {
                                         subGraphics.Add(tuple.Item1);
+                                        started = true;
+                                    }
                                     else
                                     {
                                         var brk = false;
@@ -304,16 +306,35 @@ namespace YGraphics
                                         {
                                             var p = line.GetPoint(startOffset - currentOffset);
                                             if (newLine.IsOnLine(p))
+                                            {
                                                 sp = p;
+                                                started = true;
+                                            }
+                                            else
+                                            {
+                                                var vec1 = newLine.End - p;
+                                                var vec2 = newLine.End - newLine.Start;
+                                                started = Utilities.IsSameDirection(vec1, vec2);
+                                            }
                                         }
+                                        else started = true;
+
                                         if (endOffset < offset)
                                         {
                                             var p = line.GetPoint(endOffset - currentOffset);
                                             if (newLine.IsOnLine(p))
                                                 ep = p;
+                                            else
+                                            {
+                                                var vec1 = p - newLine.Start;
+                                                var vec2 = newLine.End - newLine.Start;
+                                                started = Utilities.IsSameDirection(vec1, vec2);
+                                            }
                                             brk = true;
                                         }
-                                        subGraphics.Add(new GraphicLine(sp, ep));
+
+                                        if (started)
+                                            subGraphics.Add(new GraphicLine(sp, ep));
                                         if (brk)
                                             break;
                                     }
@@ -323,9 +344,11 @@ namespace YGraphics
                             else if (started)
                                 subGraphics.Add(tuple.Item1);
                         }
-                        graphics.Add(new GraphicCompositeCurve(subGraphics, true));
+                        if (subGraphics.Count > 0)
+                            graphics.Add(new GraphicCompositeCurve(subGraphics, true));
                     }
-                    return new GraphicCompositeCurve(graphics, false);
+                    if (graphics.Count > 0)
+                        return new GraphicCompositeCurve(graphics, false);
                 }
                 else return new GraphicCompositeCurve(tuples.Select(graphic => graphic.Item1), true);
             }
