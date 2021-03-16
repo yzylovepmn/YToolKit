@@ -46,8 +46,7 @@ namespace YGraphics
 
         public IGraphic Extend(double distance, double segmentLength, JointType jointType, IEnumerable<Segment> segments = null)
         {
-            if (distance == 0) return this;
-            return GraphicHelper.Extend(ToSegments(segmentLength).ToList(), distance, jointType, segments);
+            return GraphicHelper.Extend(ToSegments(segmentLength).ToList(), distance, jointType, segments, IsClosed);
         }
 
         public IEnumerable<IGraphic> Spilt(IEnumerable<Segment> segments, double segmentLength)
@@ -62,6 +61,27 @@ namespace YGraphics
             if (_isReverse)
                 points.Reverse();
             return points;
+        }
+
+        public Point GetPoint(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            if (_isReverse)
+                length = Length - length;
+            var parameter = GraphicHelper.GetParameter(_degree, _controlPoints, length, _length, segmentLength);
+            return GraphicHelper.ComputePoint(_controlPoints, _degree, parameter);
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            if (_isReverse)
+                length = Length - length;
+            var parameter = GraphicHelper.GetParameter(_degree, _controlPoints, length, _length, segmentLength);
+            var dir = GraphicHelper.ComputeVector(_controlPoints, _degree, parameter);
+            if (_isReverse)
+                dir = -dir;
+            return dir;
         }
     }
 }

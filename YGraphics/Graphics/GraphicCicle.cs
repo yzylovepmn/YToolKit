@@ -76,5 +76,26 @@ namespace YGraphics
                 points.Reverse();
             return points;
         }
+
+        public Point GetPoint(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var radian = length / _radius;
+            if (_isReverse)
+                radian = -radian;
+            return _center + _radius * new Vector(Math.Cos(radian), Math.Sin(radian));
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var radian = length / _radius;
+            if (_isReverse)
+                radian = -radian;
+            var dir = new Vector(-Math.Sin(radian), Math.Cos(radian));
+            if (_isReverse)
+                dir = -dir;
+            return dir;
+        }
     }
 }

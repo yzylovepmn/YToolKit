@@ -53,9 +53,8 @@ namespace YGraphics
 
         public IGraphic Extend(double distance, double segmentLength, JointType jointType, IEnumerable<Segment> segments = null)
         {
-            if (distance == 0) return this;
             if (_isContinuously)
-                return GraphicHelper.Extend(_ToSegments(segmentLength).ToList(), distance, jointType, segments);
+                return GraphicHelper.Extend(_ToSegments(segmentLength).ToList(), distance, jointType, segments, IsClosed);
             else
             {
                 var graphics = _graphics.Select(graphic => graphic.Extend(distance, segmentLength, jointType));
@@ -155,6 +154,43 @@ namespace YGraphics
                 }
             }
             return points;
+        }
+
+        public Point GetPoint(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var ret = End;
+            foreach (var graphic in _graphics)
+            {
+                var subLength = graphic.Length;
+                if (length > subLength)
+                    length -= subLength;
+                else
+                {
+                    ret = graphic.GetPoint(length, segmentLength);
+                    break;
+                }
+            }
+            return ret;
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var lastGraphic = _graphics[_graphics.Length - 1];
+            var ret = lastGraphic.GetTangent(lastGraphic.Length, segmentLength);
+            foreach (var graphic in _graphics)
+            {
+                var subLength = graphic.Length;
+                if (length > subLength)
+                    length -= subLength;
+                else
+                {
+                    ret = graphic.GetTangent(length, segmentLength);
+                    break;
+                }
+            }
+            return ret;
         }
     }
 }

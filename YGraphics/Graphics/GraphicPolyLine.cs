@@ -50,8 +50,7 @@ namespace YGraphics
 
         public IGraphic Extend(double distance, double segmentLength, JointType jointType, IEnumerable<Segment> segments = null)
         {
-            if (distance == 0) return this;
-            return GraphicHelper.Extend(_points, distance, jointType, segments);
+            return GraphicHelper.Extend(_points, distance, jointType, segments, IsClosed);
         }
 
         public IEnumerable<IGraphic> Spilt(IEnumerable<Segment> segments, double segmentLength)
@@ -62,6 +61,61 @@ namespace YGraphics
         public IEnumerable<Point> ToSegments(double segmentLength)
         {
             return GraphicHelper.ToSegments(_points, segmentLength);
+        }
+
+        public Point GetPoint(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var lastPoint = default(Point);
+            var isFirst = true;
+            var ret = End;
+            foreach (var point in _points)
+            {
+                if (isFirst)
+                    isFirst = false;
+                else
+                {
+                    var vec = point - lastPoint;
+                    var subLength = vec.Length;
+                    if (length > subLength)
+                        length -= subLength;
+                    else
+                    {
+                        vec.Normalize();
+                        ret = lastPoint + vec * length;
+                        break;
+                    }
+                }
+                lastPoint = point;
+            }
+            return ret;
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var lastPoint = default(Point);
+            var isFirst = true;
+            var ret = _points[_points.Count - 1] - _points[_points.Count - 2];
+            foreach (var point in _points)
+            {
+                if (isFirst)
+                    isFirst = false;
+                else
+                {
+                    var vec = point - lastPoint;
+                    var subLength = vec.Length;
+                    if (length > subLength)
+                        length -= subLength;
+                    else
+                    {
+                        ret = vec;
+                        break;
+                    }
+                }
+                lastPoint = point;
+            }
+            return ret;
         }
     }
 }

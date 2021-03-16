@@ -44,5 +44,15 @@ namespace YGraphics
         {
             throw new InvalidOperationException();
         }
+
+        public Point GetPoint(double length, double segmentLength)
+        {
+            return _point;
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            throw new InvalidOperationException();
+        }
     }
 }

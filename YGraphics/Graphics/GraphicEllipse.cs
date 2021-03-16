@@ -95,5 +95,26 @@ namespace YGraphics
                 points.Reverse();
             return points.Select(p => (p + vector) * transform);
         }
+
+        public Point GetPoint(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            if (_isReverse)
+                length = Length - length;
+            var parameter = GraphicHelper.GetParameter(_lr, _sr, 0, length, segmentLength);
+            return _center + new Vector(_lr * Math.Cos(parameter), _sr * Math.Sin(parameter)) * GraphicHelper.CreateRotateMatrix(_center, _rotateAngle);
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            if (_isReverse)
+                length = Length - length;
+            var parameter = GraphicHelper.GetParameter(_lr, _sr, 0, length, segmentLength);
+            var dir = new Vector(-_lr * Math.Sin(parameter), _sr * Math.Cos(parameter));
+            if (_isReverse)
+                dir = -dir;
+            return dir;
+        }
     }
 }

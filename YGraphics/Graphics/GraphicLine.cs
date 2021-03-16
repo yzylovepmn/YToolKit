@@ -75,6 +75,19 @@ namespace YGraphics
             return GraphicHelper.ToSegments(_p1, _p2, segmentLength);
         }
 
+        public Point GetPoint(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var dir = GetTangent(length, segmentLength);
+            dir.Normalize();
+            return _p1 + length * dir;
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            return _p2 - _p1;
+        }
+
         internal bool IsOnLine(Point linePoint)
         {
             return new Rect(_p1, _p2).Contains(linePoint);

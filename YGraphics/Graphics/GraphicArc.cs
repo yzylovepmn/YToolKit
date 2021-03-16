@@ -102,5 +102,30 @@ namespace YGraphics
                 points.Reverse();
             return points;
         }
+
+        public Point GetPoint(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var sweepRadian = length / _radius;
+            double radian;
+            if (_isReverse)
+                radian = Utilities.AngleToRadian(_endAngle) - sweepRadian;
+            else radian = Utilities.AngleToRadian(_startAngle) + sweepRadian;
+            return _center + _radius * new Vector(Math.Cos(radian), Math.Sin(radian));
+        }
+
+        public Vector GetTangent(double length, double segmentLength)
+        {
+            if (length < 0 || length > Length) throw new ArgumentOutOfRangeException();
+            var sweepRadian = length / _radius;
+            double radian;
+            if (_isReverse)
+                radian = Utilities.AngleToRadian(_endAngle) - sweepRadian;
+            else radian = Utilities.AngleToRadian(_startAngle) + sweepRadian;
+            var dir = new Vector(-Math.Sin(radian), Math.Cos(radian));
+            if (_isReverse)
+                dir = -dir;
+            return dir;
+        }
     }
 }

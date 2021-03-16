@@ -8,8 +8,8 @@ namespace YGraphics
 {
     public enum JointType
     {
-        Flat,
         Sharp,
-        Rounded
+        Rounded,
+        Flat,
     }
 }

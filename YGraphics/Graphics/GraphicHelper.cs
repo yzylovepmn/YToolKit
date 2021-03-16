@@ -195,13 +195,13 @@ namespace YGraphics
             return currentParameter;
         }
 
-        internal static IGraphic Extend(IList<Point> points, double distance, JointType jointType, IEnumerable<Segment> segments)
+        internal static IGraphic Extend(IList<Point> points, double distance, JointType jointType, IEnumerable<Segment> segments, bool isClosed)
         {
             var tuples = new List<Tuple<IGraphic, GeoLine?>>();
             var lastLine = default(GeoLine?);
             var lastOrigin = default(GeoLine?);
             var index = 0;
-            foreach (var line in GetLines(points, distance))
+            foreach (var line in GetLines(points, distance, isClosed))
             {
                 if (lastLine.HasValue)
                 {
@@ -228,6 +228,7 @@ namespace YGraphics
                                     {
                                         if (flag) return null;
                                         var cp = before.Cross(after);
+                                        if (!cp.HasValue) return null;
                                         tuples.Add(new Tuple<IGraphic, GeoLine?>(new GraphicLine(before.P1, cp.Value), beforeOrigin));
                                         after = new GeoLine(cp.Value, after.P2);
                                     }
@@ -252,7 +253,7 @@ namespace YGraphics
                         {
                             if (flag) return null;
                             var cp = before.Cross(after);
-                            if (before.IsOnLine(cp.Value) && after.IsOnLine(cp.Value))
+                            if (cp.HasValue && before.IsOnLine(cp.Value) && after.IsOnLine(cp.Value))
                             {
                                 before = new GeoLine(before.P1, cp.Value);
                                 after = new GeoLine(cp.Value, after.P2);
@@ -268,7 +269,25 @@ namespace YGraphics
                 index++;
             }
             if (lastLine.HasValue)
-                tuples.Add(new Tuple<IGraphic, GeoLine?>(new GraphicLine(lastLine.Value.P1, lastLine.Value.P2), lastOrigin));
+            {
+                if (!isClosed)
+                    tuples.Add(new Tuple<IGraphic, GeoLine?>(new GraphicLine(lastLine.Value.P1, lastLine.Value.P2), lastOrigin));
+                else
+                {
+                    var tuple = tuples[0];
+                    var firstLine = (GraphicLine)tuple.Item1;
+                    var p1 = lastLine.Value.P1;
+                    var p2 = firstLine.P2;
+                    var vec1 = p2 - firstLine.P1;
+                    var vec2 = p2 - p1;
+                    if (Utilities.IsSameDirection(vec1, vec2))
+                    {
+                        firstLine = new GraphicLine(p1, p2);
+                        tuples[0] = new Tuple<IGraphic, GeoLine?>(firstLine, tuple.Item2);
+                    }
+                    else return null;
+                }
+            }
 
             if (tuples.Count > 0)
             {
@@ -339,6 +358,12 @@ namespace YGraphics
                                             break;
                                     }
                                 }
+                                else if (currentOffset >= endOffset)
+                                {
+                                    if (subGraphics.Count > 0)
+                                        graphics.Add(new GraphicCompositeCurve(subGraphics, true));
+                                    break;
+                                }
                                 currentOffset = offset;
                             }
                             else if (started)
@@ -355,8 +380,9 @@ namespace YGraphics
             return null;
         }
 
-        internal static IEnumerable<GeoLine> GetLines(IEnumerable<Point> points, double distance)
+        internal static IEnumerable<GeoLine> GetLines(IEnumerable<Point> points, double distance, bool isClosed)
         {
+            var firstLine = default(GeoLine?);
             var lastPoint = default(Point);
             var isFirst = true;
             foreach (var point in points)
@@ -370,10 +396,15 @@ namespace YGraphics
                     var vec = GetVector(end - start) * distance;
                     start += vec;
                     end += vec;
-                    yield return new GeoLine(start, end);
+                    var line = new GeoLine(start, end);
+                    if (isClosed && firstLine == null)
+                        firstLine = line;
+                    yield return line;
                 }
                 lastPoint = point;
             }
+            if (firstLine.HasValue)
+                yield return firstLine.Value;
         }
 
         internal static Vector GetVector(Vector vec)

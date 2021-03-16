@@ -26,5 +26,9 @@ namespace YGraphics
         IEnumerable<IGraphic> Spilt(IEnumerable<Segment> segments, double segmentLength);
 
         IEnumerable<Point> ToSegments(double segmentLength);
+
+        Point GetPoint(double length, double segmentLength);
+
+        Vector GetTangent(double length, double segmentLength);
     }
 }
